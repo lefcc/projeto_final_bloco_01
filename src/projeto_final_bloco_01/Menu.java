@@ -3,7 +3,10 @@ package projeto_final_bloco_01;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+
+import projeto_final_bloco_01.controller.LivroController;
 import projeto_final_bloco_01.model.Ebook;
+import projeto_final_bloco_01.model.Livro;
 import projeto_final_bloco_01.model.LivroFisico;
 import projeto_final_bloco_01.util.Cores;
 
@@ -12,18 +15,19 @@ import projeto_final_bloco_01.util.Cores;
 public class Menu {
 
 	private static Scanner leia = new Scanner(System.in);
+	private static final LivroController livroController = new LivroController();
 	
 	public static void main(String[] args) {
 		
 				
 		int opcao;
 
-		LivroFisico f1 = new LivroFisico(1, "Teste", "autor", 29.99f, 1, 20.99f);
+		/*LivroFisico f1 = new LivroFisico(1, "Teste", "autor", 29.99f, 1, 20.99f);
 		f1.visualizar();
 		Ebook e1 = new Ebook(2, "Teste2", "autor", 29.99f, 2, "pdf");
-		e1.visualizar();
+		e1.visualizar(); */
 		
-		//criarContasTeste();
+		//criarLivrosTeste();
 
 		while (true) {
 
@@ -50,7 +54,7 @@ public class Menu {
 				leia.nextLine();
 			} catch (InputMismatchException e) {
 				opcao = -1;
-				System.out.println("\nDigite um número inteiro entre 1 e 6:");
+				System.out.println("\nDigite um id inteiro entre 1 e 6:");
 				leia.nextLine();
 			}
 
@@ -66,7 +70,7 @@ public class Menu {
 			case 1:
 				System.out.println(Cores.TEXT_PURPLE + "Cadastrar Livro\n\n");
 
-				//cadastrarLivro();
+				cadastrarLivro();
 
 				keyPress();
 				break;
@@ -74,7 +78,7 @@ public class Menu {
 			case 2:
 				System.out.println(Cores.TEXT_PURPLE + "Listar todos os Livros\n\n");
 
-				//listarLivros();
+				listarTodos();
 
 				keyPress();
 				break;
@@ -82,7 +86,7 @@ public class Menu {
 			case 3:
 				System.out.println(Cores.TEXT_PURPLE + "Buscar Livro por ID\n\n");
 
-				//buscarLivroId();
+				buscarLivroId();
 
 				keyPress();
 				break;
@@ -90,7 +94,7 @@ public class Menu {
 			case 4:
 				System.out.println(Cores.TEXT_PURPLE + "Atualizar Dados do Livro\n\n");
 
-				//atualizarLivro();
+				atualizarLivro();
 
 				keyPress();
 				break;
@@ -98,7 +102,7 @@ public class Menu {
 			case 5:
 				System.out.println(Cores.TEXT_PURPLE + "Apagar Livro\n\n");
 
-				//deletarLivro();
+				deletarLivro();
 
 				keyPress();
 				break;
@@ -126,6 +130,136 @@ public class Menu {
 	}
 
 
+	private static void listarTodos() {
+		livroController.listarTodos();
+	}
 
-	
+	private static void cadastrarLivro() {
+
+		System.out.print("Digite o Título do Livro: ");
+		String titulo = leia.nextLine();
+
+		System.out.print("Digite o nome do autor Livro: ");
+		String autor = leia.nextLine();
+
+		System.out.print("Digite o preço do Livro: ");
+		float preco = leia.nextFloat();
+		
+		System.out.print("Digite o Tipo de Livro (1 - Físico | 2 - Virtual): ");
+		int tipo = leia.nextInt();
+
+		switch (tipo) {
+		case 1 -> {
+			System.out.print("Digite o Peso do Livro: ");
+			float peso = leia.nextFloat();
+			leia.nextLine();
+			livroController
+					.cadastrar(new LivroFisico(livroController.gerarId(), titulo, autor, preco, tipo, peso));
+		}
+
+		case 2 -> {
+			System.out.print("Digite o Formato do Livro: ");
+			leia.skip("\\R"); 
+			String formato = leia.nextLine();
+			livroController.cadastrar(
+					new Ebook(livroController.gerarId(), titulo, autor, preco, tipo, formato));
+		}
+
+		default -> System.out.println(Cores.TEXT_RED + "Tipo de livro inválido!" + Cores.TEXT_RESET);
+		}
+	}
+
+	private static void buscarLivroId() {
+
+		System.out.print("Digite o ID do livro: ");
+		int id = leia.nextInt();
+		leia.nextLine();
+
+		livroController.procurarPorId(id);
+	}
+
+	private static void deletarLivro() {
+
+		System.out.print("Digite o ID do livro: ");
+		int id = leia.nextInt();
+		leia.nextLine();
+
+		Livro livro = livroController.buscarNaCollection(id); 
+
+		if (livro != null) {
+
+			System.out.print("\nTem certeza que deseja excluir este livro? (S/N): ");
+			String confirmacao = leia.nextLine();
+
+			if (confirmacao.equalsIgnoreCase("S")) {
+				livroController.deletar(id);
+			} else {
+				System.out.println("\nOperação cancelada!");
+			}
+
+		} else {
+			System.out.printf("\nO livro ID %d não foi encontrado!", id);
+		}
+	}
+
+	private static void atualizarLivro() {
+
+		System.out.print("Digite o ID do livro: ");
+		int id = leia.nextInt();
+		leia.nextLine();
+
+		Livro livro = livroController.buscarNaCollection(id);
+
+		if (livro != null) {
+
+			String titulo = livro.getTitulo();
+			String autor = livro.getAutor();
+			float preco = livro.getPreco();
+			int tipo = livro.getTipo();
+			
+			
+			System.out.printf("O Titulo atual do Livro é %s\nNovo Titulo (Pressione ENTER para manter o valor atual): ",
+					titulo);
+			String entrada = leia.nextLine();
+			titulo = entrada.isEmpty() ? titulo : entrada;
+
+			System.out.printf("O Autor atual é %.2f\nNovo Autor (Pressione ENTER para manter o valor atual): ", autor);
+			entrada = leia.nextLine();
+			autor = entrada.isEmpty() ? autor : entrada;
+
+			System.out.printf("O Preço atual do Livro é %.2f\nNovo Preço (Pressione ENTER para manter o valor atual): ", preco);
+			entrada = leia.nextLine();
+			preco = entrada.isEmpty() ? preco : Float.parseFloat(entrada);
+			
+			switch (tipo) {
+			case 1 -> {
+				float peso = ((LivroFisico) livro).getPeso();
+
+				System.out.printf("O Peso atual é %.2f\nNovo Peso (Pressione ENTER para manter o valor atual): ",
+						peso);
+				entrada = leia.nextLine();
+				peso = entrada.isEmpty() ? peso : Float.parseFloat(entrada);
+				livroController.atualizar(new LivroFisico(id, titulo, autor, preco, tipo, peso));
+			}
+			case 2 -> {
+
+				String formato = ((Ebook) livro).getFormato();
+
+				System.out.printf(
+						"O Formato atual é %d\nNovo Formato (Pressione ENTER para manter o valor atual): ",
+						formato);
+				entrada = leia.nextLine();
+				formato = entrada.isEmpty() ? formato : entrada;
+				livroController.atualizar(new Ebook(id, titulo, autor, preco, tipo, formato));
+			}
+			default -> System.out.println(Cores.TEXT_RED + "Tipo de livro inválido!" + Cores.TEXT_RESET);
+			}
+
+		} else {
+			System.out.printf("\nA livro id %d não foi encontrada!", id);
+		}
+
+	}
+
+		
 }
