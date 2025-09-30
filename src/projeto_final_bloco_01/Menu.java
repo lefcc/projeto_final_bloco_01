@@ -3,6 +3,8 @@ package projeto_final_bloco_01;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import projeto_final_bloco_01.model.Ebook;
+import projeto_final_bloco_01.model.LivroFisico;
 import projeto_final_bloco_01.util.Cores;
 
 
@@ -16,12 +18,17 @@ public class Menu {
 				
 		int opcao;
 
+		LivroFisico f1 = new LivroFisico(1, "Teste", "autor", 29.99f, 1, 20.99f);
+		f1.visualizar();
+		Ebook e1 = new Ebook(2, "Teste2", "autor", 29.99f, 2, "pdf");
+		e1.visualizar();
+		
 		//criarContasTeste();
 
 		while (true) {
 
 			System.out.println(Cores.TEXT_BLACK + Cores.ANSI_WHITE_BACKGROUND
-					+ "*****************************************************");
+					+ "\n*****************************************************");
 			System.out.println("                                                     ");
 			System.out.println("          Loja de Livros - LIVROMANIA                ");
 			System.out.println("                                                     ");
@@ -30,7 +37,7 @@ public class Menu {
 			System.out.println("            1 - Cadastrar Livro                      ");
 			System.out.println("            2 - Listar todos os Livros               ");
 			System.out.println("            3 - Buscar Livro por ID                  ");
-			System.out.println("            4 - Atualizar Dados do Livro            ");
+			System.out.println("            4 - Atualizar Dados do Livro             ");
 			System.out.println("            5 - Apagar Livro                         ");
 			System.out.println("            6 - Sair                                 ");
 			System.out.println("                                                     ");
@@ -117,5 +124,8 @@ public class Menu {
 		System.out.println(Cores.TEXT_RESET + "\n\nPressione Enter para continuar...");
 		leia.nextLine();
 	}
+
+
+
 	
 }
