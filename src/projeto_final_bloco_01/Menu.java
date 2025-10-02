@@ -223,7 +223,7 @@ public class Menu {
 			String entrada = leia.nextLine();
 			titulo = entrada.isEmpty() ? titulo : entrada;
 
-			System.out.printf("O Autor atual é %.2f\nNovo Autor (Pressione ENTER para manter o valor atual): ", autor);
+			System.out.printf("O Autor atual é %s\nNovo Autor (Pressione ENTER para manter o valor atual): ", autor);
 			entrada = leia.nextLine();
 			autor = entrada.isEmpty() ? autor : entrada;
 
@@ -246,7 +246,7 @@ public class Menu {
 				String formato = ((Ebook) livro).getFormato();
 
 				System.out.printf(
-						"O Formato atual é %d\nNovo Formato (Pressione ENTER para manter o valor atual): ",
+						"O Formato atual é %s\nNovo Formato (Pressione ENTER para manter o valor atual): ",
 						formato);
 				entrada = leia.nextLine();
 				formato = entrada.isEmpty() ? formato : entrada;
